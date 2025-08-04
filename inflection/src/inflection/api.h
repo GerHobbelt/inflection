@@ -8,7 +8,7 @@
  */
 #include <inflection/version.h>
 
-#if !INFLECTION_STATIC
+#if !INFLECTION_STATIC && ( ( defined( __GNUC__ ) && __GNUC__ >= 4 ) || defined( __clang__ ) || defined( HAVE___ATTRIBUTE__ ) )
 #define INFLECTION_EXPORT_API __attribute__((visibility("default")))
 #else
 #define INFLECTION_EXPORT_API
