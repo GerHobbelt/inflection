@@ -143,6 +143,7 @@ public:
      * @param str The input string.
      * @return The duplicated string.
      */
+#undef strdup
     static char16_t* strdup(const char16_t *str);
 
 private:
