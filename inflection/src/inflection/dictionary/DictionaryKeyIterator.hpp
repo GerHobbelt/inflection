@@ -7,6 +7,7 @@
 #include <inflection/dictionary/fwd.hpp>
 #include <inflection/Object.hpp>
 #include <cstdint>
+#include <memory>
 #include <string>
 
 /**
@@ -17,7 +18,9 @@ class INFLECTION_CLASS_API inflection::dictionary::DictionaryKeyIterator
 {
 
 public:
+    /// @cond
     typedef ::inflection::Object super;
+    /// @endcond
 
     /**
      * Move constructor
@@ -42,10 +45,6 @@ public:
      * Return true when this is equal to the other iterator.
      */
     bool operator==(const DictionaryKeyIterator& rhs) const;
-    /**
-     * Return false when this is equal to the other iterator.
-     */
-    bool operator!=(const DictionaryKeyIterator& rhs) const;
 
     /**
      * The first word in the dictionary.
@@ -62,7 +61,7 @@ private:
 
     explicit DictionaryKeyIterator(const ::inflection::dictionary::metadata::MarisaTrieIterator<uint64_t>& trieIterator);
 
-    ::inflection::dictionary::metadata::MarisaTrieIterator<uint64_t>* trieIterator {  };
+    std::unique_ptr<::inflection::dictionary::metadata::MarisaTrieIterator<uint64_t>> trieIterator {  };
 
     friend class DictionaryMetaData_MMappedDictionary;
 };

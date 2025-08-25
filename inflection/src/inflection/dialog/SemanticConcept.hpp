@@ -18,7 +18,9 @@ class INFLECTION_CLASS_API inflection::dialog::SemanticConcept
     : public SemanticFeatureConceptBase
 {
 public:
+    /// @cond
     typedef SemanticFeatureConceptBase super;
+    /// @endcond
 
 private:
     SemanticValue semantic;
@@ -78,11 +80,6 @@ public:
      * Returns true when both objects refer to the same model, have the same semantic value, have the same constraints and the same defaultToSemantic value.
      */
     bool operator==(const SemanticConcept& o) const;
-
-    /**
-     * Equivalent to the inverse of operator==
-     */
-    bool operator!=(const SemanticConcept& o) const;
 
     /**
      * Constructs a new SemanticConcept. A SemanticFeatureModel is required, as it will enforce the locale and store display data.

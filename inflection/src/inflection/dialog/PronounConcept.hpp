@@ -27,7 +27,10 @@ class INFLECTION_CLASS_API inflection::dialog::PronounConcept
 {
 
 public:
+    /// @cond
     typedef SemanticFeatureConceptBase super;
+    /// @endcond
+
 private:
     enum MatchState {
         NO_MATCH,
@@ -104,11 +107,6 @@ public:
      * Returns true when both objects refer to the same model, have the same semantic value, have the same constraints and the same defaultToSemantic value.
      */
     bool operator==(const PronounConcept& o) const;
-
-    /**
-     * Equivalent to the inverse of operator==
-     */
-    bool operator!=(const PronounConcept& o) const;
 
     /**
      * Constructs a new PronounConcept based on custom pronouns. Any unspecified pronouns will use the language's default pronouns.

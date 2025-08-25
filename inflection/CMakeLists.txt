@@ -106,7 +106,7 @@ add_custom_target(dist
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     VERBATIM
 )
-add_dependencies(dist inflection inflection-headers inflection-data)
+add_dependencies(dist inflection inflection-headers inflection-data docs)
 
 add_subdirectory(docs EXCLUDE_FROM_ALL)
 
@@ -119,6 +119,7 @@ make check-headers          : Tests whether all exported headers can be compiled
 make inflection             : Builds the shared library.\\n\
 make inflection-headers     : Copy all inflection public headers to <build>/inflection_headers.\\n\
 make inflection-data        : Generate all inflection data under <build>/inflection_data.\\n\
+make docs                   : Generate all inflection docs.\\n\
 make dist                   : Builds inflection, the headers, and the data.\\n\
 make coverage               : Generates code coverage using sonar-scanner\\n\
 make generate-coverage-csv  : Generates code coverage as a csv\\n\
@@ -130,3 +131,59 @@ make generate-coverage-csv  : Generates code coverage as a csv\\n\
 install(TARGETS   inflection                  LIBRARY      COMPONENT inflection_library)
 install(DIRECTORY ${INFLECTION_INCLUDE_ROOT}/ TYPE INCLUDE COMPONENT inflection_headers)
 install(DIRECTORY ${INFLECTION_DATA_ROOT}/    TYPE DATA    COMPONENT inflection_data)
+
+# ----------------------------------------------------------------------------------------
+# CPack Configuration for Ubuntu Packaging
+#
+# To update ICU version:
+# 1. Update ICU_VERSION in the GitHub Actions workflow (.github/workflows/create-ubuntu-distribution-packaging.yml)
+# 2. Make sure the downloaded ICU binary file matches the filename format
+#    (e.g., icu4c-78_1-Ubuntu22.04-x64.tgz)
+# 3. Update the line below to match the correct ICU dependency in Debian packaging
+# ----------------------------------------------------------------------------------------
+
+set(CPACK_PACKAGE_NAME "unicode-inflection")
+
+# Apply the current tagged Inflection version to the CPack version.
+# CPack may inherit a default or cached version, so we explicitly set it here.
+set(CPACK_PACKAGE_VERSION "${INFLECTION_VERSION}")
+
+# Extract version components
+string(REPLACE "." ";" INFLECTION_VERSION_LIST "${INFLECTION_VERSION}")
+
+set(CPACK_PACKAGE_VERSION_MAJOR "0")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+
+list(LENGTH INFLECTION_VERSION_LIST _len)
+if(_len GREATER 0)
+  list(GET INFLECTION_VERSION_LIST 0 CPACK_PACKAGE_VERSION_MAJOR)
+endif()
+if(_len GREATER 1)
+  list(GET INFLECTION_VERSION_LIST 1 CPACK_PACKAGE_VERSION_MINOR)
+endif()
+if(_len GREATER 2)
+  list(GET INFLECTION_VERSION_LIST 2 CPACK_PACKAGE_VERSION_PATCH)
+endif()
+
+# Basic package metadata
+set(CPACK_PACKAGE_VENDOR "Unicode Consortium")
+set(CPACK_PACKAGE_CONTACT "https://github.com/unicode-org/inflection")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Unicode Inflection Library")
+set(CPACK_GENERATOR "DEB;TGZ")
+
+# DEB-specific options
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Unicode Consortium <inflection-team@unicode.org>")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libicu77 (>= 77.1)")
+set(CPACK_DEBIAN_PACKAGE_SECTION "libs")
+set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+set(CPACK_DEBIAN_PACKAGE_VERSION "${INFLECTION_VERSION}")
+
+# Source package config
+
+set(CPACK_SOURCE_GENERATOR "TGZ")
+set(CPACK_SOURCE_IGNORE_FILES "/build/;/.git/;/.vscode/;/.idea/")
+set(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${INFLECTION_VERSION}")
+
+include(CPack)
+

@@ -20,7 +20,9 @@ class INFLECTION_CLASS_API inflection::lang::features::LanguageGrammarFeatures_G
     : public virtual inflection::Object
 {
 public:
+    /// @cond
     typedef ::inflection::Object super;
+    /// @endcond
 
 private:
     std::u16string name {  };
@@ -35,10 +37,18 @@ public:
      * If this feature is bounded, these are the valid values.
      */
     std::vector<::inflection::lang::features::LanguageGrammarFeatures_Feature> getValues() const;
-    virtual int32_t compareTo(const LanguageGrammarFeatures_GrammarFeatures& o) const;
-    bool operator<(const LanguageGrammarFeatures_GrammarFeatures& other) const;
+    /**
+     * String compares the order of the name.
+     * @param other The object to be compared with this.
+     */
+    std::weak_ordering operator<=>(const LanguageGrammarFeatures_GrammarFeatures& other) const;
 
 protected: /* package */
+    /**
+     * Construct a grammar features with name, and values.
+     * @param name The name of the grammar features.
+     * @param values The list of features.
+     */
     LanguageGrammarFeatures_GrammarFeatures(const std::u16string& name, const std::vector<::inflection::lang::features::LanguageGrammarFeatures_Feature>& values);
 public:
     /**
