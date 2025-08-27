@@ -6,7 +6,7 @@
 #include <inflection/dialog/SpeakableString.h>
 #include <inflection/dialog/SemanticFeatureConcept.h>
 #include <inflection/dialog/SemanticFeatureModel.h>
-#include <inflection/dialog/SemanticUtils.hpp>
+#include <inflection/dialog/DisplayValue.h>
 /**
  * An object that provides a way to format a word with additional grammatical category values or semantic features of a word for a given language.
  */
