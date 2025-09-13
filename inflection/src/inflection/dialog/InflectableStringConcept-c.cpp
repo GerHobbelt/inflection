@@ -53,7 +53,8 @@ iinf_create(const IDSemanticFeatureModel* model, const IDSpeakableString* value,
 
 INFLECTION_CAPI IDInflectableStringConcept*
 iinf_createWithDefaults(const IDSemanticFeatureModel* model, const IDSpeakableString* value, 
-                           const IDDisplayValue_Constraint* defaultConstraints, int32_t defaultConstraintsLen, UErrorCode* status) {
+                        const IDDisplayValue_Constraint* defaultConstraints, int32_t defaultConstraintsLen, UErrorCode* status) 
+{
     if (status != nullptr && U_SUCCESS(*status)) {
         try {
             auto defaultConstraintsMap(inflection::dialog::SemanticUtils::to_constraintMap(*npc((const inflection::dialog::SemanticFeatureModel*)model), defaultConstraints, defaultConstraintsLen));

@@ -3,7 +3,6 @@
  */
 #include <inflection/npc.hpp>
 #include <inflection/dialog/DictionaryLookupFunction.hpp>
-
 #include <inflection/dialog/DisplayValue.hpp>
 #include <inflection/dialog/SpeakableString.hpp>
 #include <inflection/dictionary/DictionaryMetaData.hpp>
@@ -11,7 +10,6 @@
 #include "inflection/tokenizer/TokenChain.hpp"
 #include "inflection/tokenizer/Token_Word.hpp"
 #include "inflection/tokenizer/TokenizerFactory.hpp"
-
 namespace inflection::dialog {
 
 DictionaryLookupFunction::DictionaryLookupFunction(const ::inflection::util::ULocale& locale, const ::std::vector<::std::u16string>& tags)
@@ -125,6 +123,11 @@ SpeakableString* DictionaryLookupFunction::getFeatureValue(const DisplayValue& d
     auto result = determine(displayString);
     if (result.empty()) {
         return nullptr;
+    }
+    for(const auto& [feature, value]: displayValue.getConstraintMap()) {
+        if (feature.getName() == u"speak") {
+            return new SpeakableString(result, value);
+        }
     }
     return new SpeakableString(result);
 }
