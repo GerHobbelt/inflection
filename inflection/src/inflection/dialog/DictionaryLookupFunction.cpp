@@ -124,11 +124,6 @@ SpeakableString* DictionaryLookupFunction::getFeatureValue(const DisplayValue& d
     if (result.empty()) {
         return nullptr;
     }
-    for(const auto& [feature, value]: displayValue.getConstraintMap()) {
-        if (feature.getName() == u"speak") {
-            return new SpeakableString(result, value);
-        }
-    }
     return new SpeakableString(result);
 }
 

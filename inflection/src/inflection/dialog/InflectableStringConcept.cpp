@@ -52,11 +52,40 @@ SpeakableString* InflectableStringConcept::getFeatureValue(const SemanticFeature
     if (constraint != nullptr) {
         return new SpeakableString(*npc(constraint));
     }
+    const auto displayValueResult = getDisplayValue(true);
+    if (displayValueResult) {
+        const auto defaultFeatureFunction = npc(getModel())->getDefaultFeatureFunction(feature);
+        ::std::unique_ptr<SpeakableString> computedValue;
+        ::std::unique_ptr<SpeakableString> baseValue;
+        if (defaultFeatureFunction != nullptr) {
+            computedValue.reset(npc(defaultFeatureFunction)->getFeatureValue(*displayValueResult, constraints));
+            baseValue.reset(npc(defaultFeatureFunction)->getFeatureValue(defaultDisplayValue, constraints));
+        }
+        const auto& displayConstraintMap = displayValueResult->getConstraintMap();
+        auto displayConstraint = displayConstraintMap.find(feature);
+        if (displayConstraint != displayConstraintMap.end()) {
+            auto numberFeature = npc(getModel())->getFeature(u"number");
+            if (feature.getName() == u"gender" && baseValue && numberFeature != nullptr && displayConstraintMap.find(*npc(numberFeature)) != displayConstraintMap.end()) {
+                return baseValue.release();
+            }
+            return new SpeakableString(displayConstraint->second);
+        }
+        if (computedValue) {
+            return computedValue.release();
+        }
+        if (baseValue) {
+            return baseValue.release();
+        }
+    }
+    const auto& initialConstraintMap = defaultDisplayValue.getConstraintMap();
+    auto initialConstraint = initialConstraintMap.find(feature);
+    if (initialConstraint != initialConstraintMap.end()) {
+        return new SpeakableString(initialConstraint->second);
+    }
     auto defaultFeatureFunction = npc(getModel())->getDefaultFeatureFunction(feature);
     if (defaultFeatureFunction != nullptr) {
-        const auto displayValueResult = getDisplayValue(true);
-        if (displayValueResult) {
-            return npc(defaultFeatureFunction)->getFeatureValue(*displayValueResult, constraints);
+        if (auto fallbackValue = ::std::unique_ptr<SpeakableString>(npc(defaultFeatureFunction)->getFeatureValue(defaultDisplayValue, constraints))) {
+            return fallbackValue.release();
         }
     }
     return nullptr;
@@ -76,11 +105,7 @@ bool InflectableStringConcept::isExists() const
 {
     auto defaultDisplayFunction = npc(getModel())->getDefaultDisplayFunction();
     if (defaultDisplayFunction != nullptr && !constraints.empty()) {
-        ::std::map<SemanticFeature, ::std::u16string> constraintMap;
-        if (!value.speakEqualsPrint()) {
-            constraintMap.emplace(*npc(getSpeakFeature()), value.getSpeak());
-        }
-        SemanticFeatureModel_DisplayData displayData({DisplayValue(value.getPrint(), constraintMap)});
+        SemanticFeatureModel_DisplayData displayData({defaultDisplayValue});
         ::std::unique_ptr<DisplayValue> returnVal(npc(defaultDisplayFunction)->getDisplayValue(displayData, constraints, allowInflectionGuess));
         if (returnVal != nullptr) {
             return *returnVal;
