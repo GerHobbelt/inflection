@@ -11,7 +11,7 @@ endif()
 set(CMAKE_CXX_FLAGS_${BUILD_TYPE} ${CMAKE_CXX_FLAGS_RELEASE})
 target_link_libraries(tool_libraries
         INTERFACE
-            xml2
+            LibXml2::LibXml2
             ICU::uc ICU::i18n
             $<$<PLATFORM_ID:Linux>:${CMAKE_DL_LIBS}>
 )
