@@ -17,24 +17,11 @@ public:
     explicit MlCommonConceptFactory(const ::inflection::util::ULocale& language);
     ~MlCommonConceptFactory() override;
 
-    // Malayalam-specific conjunction handling
-    ::inflection::dialog::SemanticConceptList* createOrList(
-        const ::std::vector<const ::inflection::dialog::SemanticFeatureConceptBase*>& concepts) const override;
-
-    ::inflection::dialog::SemanticConceptList* createAndList(
-        const ::std::vector<const ::inflection::dialog::SemanticFeatureConceptBase*>& concepts) const override;
-
 protected:
     ::inflection::dialog::SpeakableString quantifiedJoin(
         const ::inflection::dialog::SpeakableString& formattedNumber,
         const ::inflection::dialog::SpeakableString& nounPhrase,
         const ::std::u16string& measureWord,
-        ::inflection::dialog::Plurality::Rule countType) const override;
-
-    ::inflection::dialog::SpeakableString quantifyType(
-        const ::inflection::dialog::SpeakableString& formattedNumber,
-        const ::inflection::dialog::SemanticFeatureConceptBase& semanticConcept,
-        bool useDefault,
         ::inflection::dialog::Plurality::Rule countType) const override;
 };
 

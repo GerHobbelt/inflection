@@ -1,14 +1,12 @@
 /*
-* Copyright 2025 Unicode Incorporated and others. All rights reserved.
-*/
+ * Copyright 2025 Unicode Incorporated and others. All rights reserved.
+ */
 #include "MlGrammarSynthesizer_CaseLookupFunction.hpp"
 
 #include <inflection/grammar/synthesis/GrammemeConstants.hpp>
 #include <inflection/dialog/SemanticFeature.hpp>
 #include <inflection/dialog/DisplayValue.hpp>
 #include <inflection/dialog/SpeakableString.hpp>
-#include <inflection/util/LocaleUtils.hpp>
-#include <inflection/util/StringViewUtils.hpp>
 
 namespace inflection::grammar::synthesis {
 
@@ -38,16 +36,9 @@ MlGrammarSynthesizer_CaseLookupFunction::MlGrammarSynthesizer_CaseLookupFunction
    const ::inflection::dialog::DisplayValue& displayValue,
    const ::std::map<::inflection::dialog::SemanticFeature, ::std::u16string>& /*constraints*/) const
 {
-   std::u16string displayString;
-   ::inflection::util::StringViewUtils::lowercase(
-       &displayString,
-       displayValue.getDisplayString(),
-       ::inflection::util::LocaleUtils::MALAYALAM());
+   const std::u16string& displayString(displayValue.getDisplayString());
 
-   // Use std::u16string::ends_with with a u16string_view suffix
-   for (const auto& pair : m_suffixToCase_) {
-       const std::u16string_view suffix = pair.first;
-       const std::u16string& caseGrammeme = pair.second;
+   for (const auto& [suffix, caseGrammeme] : m_suffixToCase_) {
        if (displayString.ends_with(suffix)) {
            return new ::inflection::dialog::SpeakableString(caseGrammeme);
        }

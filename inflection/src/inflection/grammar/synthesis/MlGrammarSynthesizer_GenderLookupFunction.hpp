@@ -1,14 +1,12 @@
 /*
- * Copyright 2025 Apple Inc. All rights reserved.
+ * Copyright 2025 Unicode Incorporated and others. All rights reserved.
  */
 #pragma once
 
-#include <inflection/fwd.hpp>
 #include <inflection/dictionary/fwd.hpp>
 #include <inflection/grammar/synthesis/fwd.hpp>
 #include <inflection/dialog/DictionaryLookupFunction.hpp>
 #include <string>
-#include <vector>
 
 class inflection::grammar::synthesis::MlGrammarSynthesizer_GenderLookupFunction
     : public ::inflection::dialog::DictionaryLookupFunction
@@ -28,4 +26,3 @@ public:
     MlGrammarSynthesizer_GenderLookupFunction(const MlGrammarSynthesizer_GenderLookupFunction&) = delete;
     MlGrammarSynthesizer_GenderLookupFunction& operator=(const MlGrammarSynthesizer_GenderLookupFunction&) = delete;
 };
-

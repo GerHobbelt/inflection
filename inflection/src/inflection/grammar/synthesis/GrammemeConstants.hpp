@@ -76,6 +76,7 @@ public:
     static constexpr auto MOOD = u"mood";
     static const ::std::u16string& MOOD_IMPERATIVE();
     static const ::std::u16string& MOOD_INDICATIVE();
+    static const ::std::u16string& MOOD_SUBJUNCTIVE();
 
     static constexpr auto TENSE = u"tense";
     static const ::std::u16string& TENSE_PAST();

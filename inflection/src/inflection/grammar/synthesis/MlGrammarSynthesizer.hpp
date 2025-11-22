@@ -20,7 +20,7 @@ public:
         singular,
         plural
     };
-    static Number getNumber(const ::std::u16string* value);
+    static Number getNumber(const ::std::u16string& value);
 
     enum class Case {
         undefined,
@@ -31,7 +31,7 @@ public:
         instrumental,
         locative
     };
-    static Case getCase(const ::std::u16string* value);
+    static Case getCase(const ::std::u16string& value);
 
     enum class Person {
         undefined,
@@ -39,7 +39,7 @@ public:
         second,
         third
     };
-    static Person getPerson(const ::std::u16string* value);
+    static Person getPerson(const ::std::u16string& value);
 
     enum class Tense {
         undefined,
@@ -47,7 +47,7 @@ public:
         present,
         future
     };
-    static Tense getTense(const ::std::u16string* value);
+    static Tense getTense(const ::std::u16string& value);
 
     enum class Mood {
         undefined,
@@ -55,32 +55,22 @@ public:
         imperative,
         subjunctive
     };
-    static Mood getMood(const ::std::u16string* value);
+    static Mood getMood(const ::std::u16string& value);
 
     typedef uint32_t LookupKey;
     static LookupKey makeLookupKey(Number num, Case kase);
     static LookupKey makeVerbLookupKey(Person person, Number num, Tense tense, Mood mood);
 
-    static Person personFromConstraint(const ::std::u16string& val);
-    static Number numberFromConstraint(const ::std::u16string& val);
-    static Case caseFromConstraint(const ::std::u16string& val);
-
     static LookupKey buildVerbSuffixKey(const std::vector<::std::u16string>& constraintValues);
 
-    static const std::map<LookupKey, ::std::u16string> malayalamSuffixMap;
-    static const std::map<LookupKey, ::std::u16string> malayalamVerbSuffixMap;
+private:
+    static const std::map<LookupKey, ::std::u16string_view>& MALAYALAM_SUFFIX_MAP();
+    static const std::map<LookupKey, ::std::u16string_view>& MALAYALAM_VERB_SUFFIX_MAP();
 
-    static const ::std::u16string& getSuffix(LookupKey key);
-    static const ::std::u16string& getVerbSuffix(LookupKey key);
+public:
+    static ::std::u16string_view getSuffix(LookupKey key);
+    static ::std::u16string_view getVerbSuffix(LookupKey key);
 
 private:
     MlGrammarSynthesizer() = delete;
-
-public:
-    static constexpr auto NOUN_CASE   = u"case";
-    static constexpr auto NOUN_NUMBER = u"number";
-    static constexpr auto VERB_PERSON = u"person";
-    static constexpr auto VERB_NUMBER = u"verbNumber";
-    static constexpr auto VERB_TENSE  = u"tense";
-    static constexpr auto VERB_MOOD   = u"mood";
 };

@@ -18,7 +18,7 @@ MlGrammarSynthesizer_NumberLookupFunction::MlGrammarSynthesizer_NumberLookupFunc
     : super(::inflection::util::LocaleUtils::MALAYALAM(),
             {GrammemeConstants::NUMBER_SINGULAR(), GrammemeConstants::NUMBER_PLURAL()},
             {GrammemeConstants::POS_NOUN(), GrammemeConstants::POS_VERB()})
-    , tokenizer(::inflection::tokenizer::TokenizerFactory::createTokenizer(::inflection::util::LocaleUtils::MALAYALAM()))
+    , tokenizer(npc(::inflection::tokenizer::TokenizerFactory::createTokenizer(::inflection::util::LocaleUtils::MALAYALAM())))
     , dictionary(getDictionary())
 {
     ::inflection::util::Validate::notNull(dictionary.getBinaryProperties(&nounProperty, {u"noun"}));
@@ -39,8 +39,7 @@ MlGrammarSynthesizer_NumberLookupFunction::~MlGrammarSynthesizer_NumberLookupFun
         return out;
     }
 
-    std::unique_ptr<::inflection::tokenizer::TokenChain> tokenChain(
-        npc(npc(tokenizer.get())->createTokenChain(word)));
+    std::unique_ptr<::inflection::tokenizer::TokenChain> tokenChain(npc(tokenizer->createTokenChain(word)));
 
     for (const auto& token : *tokenChain) {
         if (dynamic_cast<const ::inflection::tokenizer::Token_Word*>(&token) != nullptr) {
@@ -54,13 +53,10 @@ MlGrammarSynthesizer_NumberLookupFunction::~MlGrammarSynthesizer_NumberLookupFun
     }
 
     // plural suffix detection
-    static const std::vector<std::u16string> PLURAL_SUFFIXES = {
-        u"കൾ", u"ങ്ങൾ", u"മാർ", u"വർ", u"കളുടെ", u"ങ്ങൾക്ക്"
-    };
 
     const auto& lastToken = npc(npc(tokenChain->getEnd())->getPrevious())->getValue();
-    for (const auto& suffix : PLURAL_SUFFIXES) {
-        if (lastToken.size() >= suffix.size() && lastToken.ends_with(suffix)) {
+    for (const auto& suffix : {u"കൾ", u"ങ്ങൾ", u"മാർ", u"വർ", u"കളുടെ", u"ങ്ങൾക്ക്"}) {
+        if (lastToken.ends_with(suffix)) {
             return GrammemeConstants::NUMBER_PLURAL();
         }
     }

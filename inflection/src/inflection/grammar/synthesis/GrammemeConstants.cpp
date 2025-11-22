@@ -285,6 +285,12 @@ const ::std::u16string& GrammemeConstants::MOOD_INDICATIVE()
     return *npc(MOOD_INDICATIVE_);
 }
 
+const ::std::u16string& GrammemeConstants::MOOD_SUBJUNCTIVE()
+{
+    static auto MOOD_SUBJUNCTIVE_ = new ::std::u16string(u"subjunctive");
+    return *npc(MOOD_SUBJUNCTIVE_);
+}
+
 const ::std::u16string& GrammemeConstants::TENSE_PAST()
 {
     static auto TENSE_PAST_ = new ::std::u16string(u"past");

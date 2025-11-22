@@ -1,6 +1,6 @@
 /*
-* Copyright 2025 Unicode Incorporated and others. All rights reserved.
-*/
+ * Copyright 2025 Unicode Incorporated and others. All rights reserved.
+ */
 #pragma once
 
 #include <inflection/dictionary/fwd.hpp>

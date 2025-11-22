@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Apple Inc. All rights reserved.
+ * Copyright 2025 Unicode Incorporated and others. All rights reserved.
  */
 #include <inflection/grammar/synthesis/MlGrammarSynthesizer_GenderLookupFunction.hpp>
 
@@ -16,11 +16,6 @@
 
 namespace inflection::grammar::synthesis {
 
-static bool ends_with(const std::u16string& str, const std::u16string_view& suffix) {
-    if (suffix.size() > str.size()) return false;
-    return std::equal(suffix.rbegin(), suffix.rend(), str.rbegin());
-}
-
 MlGrammarSynthesizer_GenderLookupFunction::MlGrammarSynthesizer_GenderLookupFunction()
     : super(::inflection::util::LocaleUtils::MALAYALAM(),
             {GrammemeConstants::GENDER_MASCULINE(),
@@ -28,7 +23,7 @@ MlGrammarSynthesizer_GenderLookupFunction::MlGrammarSynthesizer_GenderLookupFunc
              GrammemeConstants::GENDER_NEUTER()},
             {GrammemeConstants::POS_NOUN(),
              GrammemeConstants::POS_PRONOUN()})
-    , tokenizer(::inflection::tokenizer::TokenizerFactory::createTokenizer(::inflection::util::LocaleUtils::MALAYALAM()))
+    , tokenizer(npc(::inflection::tokenizer::TokenizerFactory::createTokenizer(::inflection::util::LocaleUtils::MALAYALAM())))
     , dictionary(getDictionary())
 {
     ::inflection::util::Validate::notNull(dictionary.getBinaryProperties(&nounProperty, {u"noun"}));
@@ -36,7 +31,6 @@ MlGrammarSynthesizer_GenderLookupFunction::MlGrammarSynthesizer_GenderLookupFunc
 
 MlGrammarSynthesizer_GenderLookupFunction::~MlGrammarSynthesizer_GenderLookupFunction()
 {
-
 }
 
 static const ::std::set<::std::u16string_view>& FEMININE_SUFFIXES()
@@ -75,7 +69,7 @@ static const ::std::set<::std::u16string_view>& NEUTER_SUFFIXES()
 
     auto gender = super::determine(word);
     if (gender.empty()) {
-        ::std::unique_ptr<::inflection::tokenizer::TokenChain> tokenChain(npc(npc(tokenizer.get())->createTokenChain(word)));
+        ::std::unique_ptr<::inflection::tokenizer::TokenChain> tokenChain(npc(tokenizer->createTokenChain(word)));
         
         // First try dictionary lookup on noun tokens
         for (auto token = tokenChain->begin(); token != tokenChain->end(); ++token) {
@@ -105,7 +99,7 @@ static const ::std::set<::std::u16string_view>& NEUTER_SUFFIXES()
                     const auto& stringToken = npc(token)->getCleanValue();
 
                     for (const auto& suffix : MASCULINE_SUFFIXES()) {
-                        if (ends_with(stringToken, suffix)) {
+                        if (stringToken.ends_with(suffix)) {
                             gender = GrammemeConstants::GENDER_MASCULINE();
                             break;
                         }
@@ -113,7 +107,7 @@ static const ::std::set<::std::u16string_view>& NEUTER_SUFFIXES()
 
                     if (gender.empty()) {
                         for (const auto& suffix : FEMININE_SUFFIXES()) {
-                            if (ends_with(stringToken, suffix)) {
+                            if (stringToken.ends_with(suffix)) {
                                 gender = GrammemeConstants::GENDER_FEMININE();
                                 break;
                             }
@@ -122,7 +116,7 @@ static const ::std::set<::std::u16string_view>& NEUTER_SUFFIXES()
 
                     if (gender.empty()) {
                         for (const auto& suffix : NEUTER_SUFFIXES()) {
-                            if (ends_with(stringToken, suffix)) {
+                            if (stringToken.ends_with(suffix)) {
                                 gender = GrammemeConstants::GENDER_NEUTER();
                                 break;
                             }
