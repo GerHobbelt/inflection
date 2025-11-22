@@ -62,6 +62,7 @@ SpeakableString* InflectableStringConcept::getFeatureValue(const SemanticFeature
     return nullptr;
 }
 
+
 bool InflectableStringConcept::isExists() const
 {
     return getDisplayValue(false).has_value();
@@ -76,11 +77,7 @@ bool InflectableStringConcept::isExists() const
 {
     auto defaultDisplayFunction = npc(getModel())->getDefaultDisplayFunction();
     if (defaultDisplayFunction != nullptr && !constraints.empty()) {
-        ::std::map<SemanticFeature, ::std::u16string> constraintMap;
-        if (!value.speakEqualsPrint()) {
-            constraintMap.emplace(*npc(getSpeakFeature()), value.getSpeak());
-        }
-        SemanticFeatureModel_DisplayData displayData({DisplayValue(value.getPrint(), constraintMap)});
+        SemanticFeatureModel_DisplayData displayData({defaultDisplayValue});
         ::std::unique_ptr<DisplayValue> returnVal(npc(defaultDisplayFunction)->getDisplayValue(displayData, constraints, allowInflectionGuess));
         if (returnVal != nullptr) {
             return *returnVal;
